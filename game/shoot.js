@@ -88,7 +88,19 @@ function player_collision()
         player1.graphic.position.y -= y;
     if ( y > HEIGHT )
         player1.graphic.position.y -= y - HEIGHT;
-
+    for (var j = 0; j < ennemies.length; j++)
+    {
+        if (player1.position.x > ennemies[j].position.x - 8
+            && player1.position.x < ennemies[j].position.x + 8
+            && player1.position.y > ennemies[j].position.y - 8
+            && player1.position.y < ennemies[j].position.y + 8)
+            {
+              player1.life--;
+              if (player1.life <= 0) {
+                player1.dead();
+              }
+            }
+    }
 }
 
 function ennemies_collision()
@@ -132,7 +144,9 @@ function player_falling()
             && (y > tileY)
             && (y < mtileY))
         {
-            player1.dead();
+            player1.life--;
+            if (player1.life <= 0)
+              player1.dead();
         }
     }
 
