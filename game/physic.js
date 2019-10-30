@@ -14,5 +14,26 @@ function update()
         player1.decelerate(moveDistance);
 
     player1.move();
+    for (var j = 0; j < ennemies.length; j++)
+    {
+      var i = Math.floor(Math.random() * 1000);
+      if (i % 4 == 0)
+      {
+        ennemies[j].turnLeft(rotateAngle);
+      }
+      else if (i % 3 == 0)
+      {
+        ennemies[j].turnRight(rotateAngle);
+      }
+      else if (i % 2 == 0)
+      {
+        ennemies[j].accelerate(moveDistance);
+      }
+      else
+      {
+        ennemies[j].decelerate(moveDistance);
+      }
+      ennemies[j].move();
+    }
     controls.update();
 }

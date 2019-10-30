@@ -2,7 +2,7 @@ var bulletTime1 = 0;
 
 var bullet_player1_material = new THREE.MeshLambertMaterial(
 {
-    color: 0x00ff00, 
+    color: 0x00ff00,
     transparent: false
 });
 
@@ -19,7 +19,7 @@ function shoot()
         bullet.angle = player1.direction;
         player1.bullets.push(bullet);
         bulletTime1 = clock.getElapsedTime();
-    } 
+    }
 
     // move bullets
     var moveDistance = 5;
@@ -37,6 +37,7 @@ function collisions()
     bullet_collision();
     player_collision();
     player_falling();
+    ennemies_collision();
 }
 
 function bullet_collision()
@@ -51,6 +52,24 @@ function bullet_collision()
             player1.bullets.splice(i, 1);
             i--;
         }
+        console.log("Bullet" + i + " x : " + player1.bullets[i].position.x);
+        console.log("Bullet" + i + " y : " + player1.bullets[i].position.y);
+        for (var j = 0; j < ennemies.length; j++)
+        {
+          console.log("Ennemy" + j + " x : " + ennemies[j].position.x);
+          console.log("Ennemy" + j + " y : " + ennemies[j].position.y);
+          if (player1.bullets[i].position.x > ennemies[j].position.x - 8
+              && player1.bullets[i].position.x < ennemies[j].position.x + 8
+              && player1.bullets[i].position.y > ennemies[j].position.y - 8
+              && player1.bullets[i].position.y < ennemies[j].position.y + 8)
+              {
+                scene.remove(player1.bullets[i]);
+                player1.bullets.splice(i, 1);
+                i--;
+                scene.remove(ennemies[j].graphic);
+                ennemies.splice(j, 1);
+              }
+        }
     }
 
 }
@@ -63,11 +82,31 @@ function player_collision()
 
     if ( x > WIDTH )
         player1.graphic.position.x -= x - WIDTH;
+    if (x < 0)
+        player1.graphic.position.x -= x;
     if ( y < 0 )
         player1.graphic.position.y -= y;
     if ( y > HEIGHT )
         player1.graphic.position.y -= y - HEIGHT;
 
+}
+
+function ennemies_collision()
+{
+  for (var j = 0; j < ennemies.length; j++)
+  {
+    var x = ennemies[j].graphic.position.x + WIDTH / 2;
+    var y = ennemies[j].graphic.position.y + HEIGHT / 2;
+
+    if ( x > WIDTH )
+        ennemies[j].graphic.position.x -= x - WIDTH;
+    if (x < 0)
+        ennemies[j].graphic.position.x -= x;
+    if ( y < 0 )
+        ennemies[j].graphic.position.y -= y;
+    if ( y > HEIGHT )
+        ennemies[j].graphic.position.y -= y - HEIGHT;
+  }
 }
 
 function player_falling()
@@ -90,7 +129,7 @@ function player_falling()
 
         if ((x > tileX)
             && (x < mtileX)
-            && (y > tileY) 
+            && (y > tileY)
             && (y < mtileY))
         {
             player1.dead();
